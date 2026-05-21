@@ -1,0 +1,28 @@
+from pathlib import Path
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+RAW_DIR = PROJECT_ROOT / "data" / "raw"
+PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
+SIGNAL_DIR = PROCESSED_DIR / "signals"
+FACTOR_DIR = PROCESSED_DIR / "factors"
+BACKTEST_DIR = PROCESSED_DIR / "backtest"
+OUTPUT_DIR = PROJECT_ROOT / "outputs"
+PLOT_DIR = OUTPUT_DIR / "plots"
+TABLE_DIR = OUTPUT_DIR / "tables"
+LOG_DIR = OUTPUT_DIR / "logs"
+DOCS_DIR = PROJECT_ROOT / "docs"
+
+END_DATE = "2025-04-30"
+TARGET_INDEX = "000985.XSHG"
+
+BOLL_WINDOW = 20
+BOLL_STD = 2
+
+ERP_PERCENTILE_WINDOW = 1250
+HIGH_Q = 0.8
+LOW_Q = 0.2
+
+ADVANCE_DECLINE_MA = 60
+TRADING_DAYS = 252
+FEE_RATE = 0.0005

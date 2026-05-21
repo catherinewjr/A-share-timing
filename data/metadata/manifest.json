@@ -1,0 +1,345 @@
+[
+  {
+    "name": "Bollinger price raw",
+    "file": "data\\raw\\bollinger_price_raw.csv.gz",
+    "frequency": "daily",
+    "description": "000985.XSHG daily close for later Bollinger-band calculation. No band or signal is calculated.",
+    "fields": {
+      "date": "trading date",
+      "close": "daily close of 000985.XSHG"
+    },
+    "rows": 3721,
+    "start_date": "2010-01-04",
+    "end_date": "2025-04-30",
+    "missing_ratio": {
+      "date": 0.0,
+      "close": 0.0
+    },
+    "notes": "Bollinger parameters are not applied in this stage."
+  },
+  {
+    "name": "Margin buy stock raw",
+    "file": "data\\raw\\margin_buy_stock_raw.csv.gz",
+    "frequency": "daily stock-level",
+    "description": "Stock-level buy_on_margin_value returned by rqdatac.get_securities_margin. File may contain only stocks with margin records.",
+    "fields": {
+      "date": "trading date",
+      "stock": "A-share order_book_id",
+      "buy_on_margin_value": "stock-level margin buying value"
+    },
+    "rows": 1000,
+    "start_date": "2010-05-27",
+    "end_date": "2014-07-14",
+    "missing_ratio": {
+      "date": 0.0,
+      "stock": 0.0,
+      "buy_on_margin_value": 0.0
+    },
+    "notes": "Non-margin sample returned None in follow-up probe; missing stock-date records should be treated as no margin record, not as confirmed zero unless manually approved."
+  },
+  {
+    "name": "A-share daily raw",
+    "file": "data\\raw\\ashare_daily_raw.csv.gz",
+    "frequency": "daily stock-level",
+    "description": "Stock-level A-share close, prev_close, and amount for later advance/decline amount calculations.",
+    "fields": {
+      "date": "trading date",
+      "stock": "A-share order_book_id",
+      "close": "daily close",
+      "prev_close": "previous close returned by rqdatac",
+      "amount": "total_turnover from rqdatac.get_price"
+    },
+    "rows": 1000,
+    "start_date": "2010-01-04",
+    "end_date": "2014-02-24",
+    "missing_ratio": {
+      "date": 0.0,
+      "stock": 0.0,
+      "close": 0.0,
+      "prev_close": 0.0,
+      "amount": 0.0
+    },
+    "notes": "Flat stocks are included in total_amount but not up_amount/down_amount. Newly listed stocks with missing prev_close are included in total_amount if amount is available, but not up/down. ST stocks are not filtered. Suspended rows are kept as returned by rqdatac; missing amount is ignored by pandas sum."
+  },
+  {
+    "name": "Advance decline amount daily",
+    "file": "data\\raw\\advance_decline_amount_daily.csv.gz",
+    "frequency": "daily",
+    "description": "Prepared daily aggregate table with up_amount, down_amount and total_amount. This is an intermediate data table, not a timing signal.",
+    "fields": {
+      "date": "trading date",
+      "up_amount": "sum of amount where close > prev_close",
+      "down_amount": "sum of amount where close < prev_close",
+      "total_amount": "sum of amount across returned stock rows"
+    },
+    "rows": 3721,
+    "start_date": "2010-01-04",
+    "end_date": "2025-04-30",
+    "missing_ratio": {
+      "date": 0.0,
+      "up_amount": 0.0,
+      "down_amount": 0.0,
+      "total_amount": 0.0
+    },
+    "notes": "Flat stocks are included in total_amount but not up_amount/down_amount. Newly listed stocks with missing prev_close are included in total_amount if amount is available, but not up/down. ST stocks are not filtered. Suspended rows are kept as returned by rqdatac; missing amount is ignored by pandas sum."
+  },
+  {
+    "name": "50ETF option contract raw",
+    "file": "data\\raw\\option_50etf_contract_raw.csv.gz",
+    "frequency": "daily contract-level",
+    "description": "Contract-level 50ETF option volume, amount and open interest.",
+    "fields": {
+      "date": "trading date",
+      "contract": "option order_book_id",
+      "option_type": "C/P from instrument table",
+      "volume": "contract trading volume",
+      "amount": "total_turnover",
+      "oi": "open_interest"
+    },
+    "rows": 1000,
+    "start_date": "2017-03-06",
+    "end_date": "2017-06-28",
+    "missing_ratio": {
+      "date": 0.0,
+      "contract": 0.0,
+      "option_type": 0.0,
+      "volume": 0.0,
+      "amount": 0.0,
+      "oi": 0.0,
+      "strike_price": 0.0,
+      "listed_date": 0.0,
+      "maturity_date": 0.0,
+      "de_listed_date": 0.0
+    },
+    "notes": "Only 510050.XSHG options are included for PCR."
+  },
+  {
+    "name": "50ETF option PCR daily",
+    "file": "data\\raw\\option_50etf_pcr_daily.csv.gz",
+    "frequency": "daily",
+    "description": "Daily aggregated put/call volume, amount, and open interest ratios for 50ETF options.",
+    "fields": {
+      "date": "trading date",
+      "volume_pcr": "put_volume / call_volume",
+      "amount_pcr": "put_amount / call_amount",
+      "oi_pcr": "put_oi / call_oi"
+    },
+    "rows": 1982,
+    "start_date": "2017-03-06",
+    "end_date": "2025-04-30",
+    "missing_ratio": {
+      "date": 0.0,
+      "put_volume": 0.0,
+      "call_volume": 0.0,
+      "put_amount": 0.0,
+      "call_amount": 0.0,
+      "put_oi": 0.0,
+      "call_oi": 0.0,
+      "volume_pcr": 0.0,
+      "amount_pcr": 0.0,
+      "oi_pcr": 0.0
+    },
+    "notes": "PCR ratios are prepared data series, not final timing signals."
+  },
+  {
+    "name": "Option IV contract raw",
+    "file": "data\\raw\\option_iv_contract_raw.csv.gz",
+    "frequency": "daily contract-level",
+    "description": "Contract-level option IV for 50ETF, 300ETF and 500ETF option candidates, plus underlying ETF close as underlying_price.",
+    "fields": {
+      "date": "trading date",
+      "contract": "option order_book_id",
+      "underlying_price": "underlying ETF close from rqdatac.get_price",
+      "implied_volatility": "iv from rqdatac.options.get_greeks"
+    },
+    "rows": 1000,
+    "start_date": "2017-03-06",
+    "end_date": "2017-06-27",
+    "missing_ratio": {
+      "date": 0.0,
+      "contract": 0.0,
+      "underlying_order_book_id": 0.0,
+      "option_type": 0.0,
+      "strike_price": 0.0,
+      "underlying_price": 0.0,
+      "maturity_date": 0.0,
+      "days_to_expiry": 0.0,
+      "moneyness": 0.0,
+      "implied_volatility": 0.0,
+      "listed_date": 0.0,
+      "de_listed_date": 0.0
+    },
+    "notes": "underlying_price is not returned by options.get_greeks; it is joined from the underlying ETF close."
+  },
+  {
+    "name": "Option IV selected daily",
+    "file": "data\\raw\\option_iv_selected_daily.csv.gz",
+    "frequency": "daily selected contracts",
+    "description": "Nearest-month and nearest-moneyness selected contracts for 105/95, 110/90 and 120/80 pairs.",
+    "fields": {
+      "target_moneyness": "target strike/underlying_price",
+      "selection_method": "nearest",
+      "pair": "high/low moneyness pair"
+    },
+    "rows": 23466,
+    "start_date": "2017-03-06",
+    "end_date": "2025-04-30",
+    "missing_ratio": {
+      "date": 0.0,
+      "contract": 0.0,
+      "underlying_order_book_id": 0.0,
+      "option_type": 0.0,
+      "strike_price": 0.0,
+      "underlying_price": 0.0,
+      "maturity_date": 0.0,
+      "days_to_expiry": 0.0,
+      "moneyness": 0.0,
+      "implied_volatility": 0.0,
+      "listed_date": 0.0,
+      "de_listed_date": 0.0,
+      "distance": 0.0,
+      "target_moneyness": 0.0,
+      "pair": 0.0,
+      "side": 0.0,
+      "selection_method": 0.0
+    },
+    "notes": "Nearest-neighbor selection is implemented. Interpolation is saved in the ratio table."
+  },
+  {
+    "name": "Option IV ratio daily",
+    "file": "data\\raw\\option_iv_ratio_daily.csv.gz",
+    "frequency": "daily",
+    "description": "Prepared IV high/low ratio table using nearest-neighbor and interpolation versions.",
+    "fields": {
+      "iv_105_95": "nearest-neighbor 1.05 / 0.95 IV ratio",
+      "iv_105_95_interp": "linear interpolation version"
+    },
+    "rows": 3911,
+    "start_date": "2017-03-06",
+    "end_date": "2025-04-30",
+    "missing_ratio": {
+      "date": 0.0,
+      "underlying": 0.0,
+      "iv_105_95_nearest": 0.0,
+      "iv_105_95_interp": 0.3681922781897213,
+      "iv_110_90_nearest": 0.0,
+      "iv_110_90_interp": 0.6384556379442597,
+      "iv_120_80_nearest": 0.0,
+      "iv_120_80_interp": 0.9209920736384556,
+      "iv_105_95": 0.0,
+      "iv_110_90": 0.0,
+      "iv_120_80": 0.0
+    },
+    "notes": "This is a prepared data ratio, not a final timing signal."
+  },
+  {
+    "name": "Futures member rank raw",
+    "file": "data\\raw\\futures_member_rank_raw.csv.gz",
+    "frequency": "daily member-level",
+    "description": "Top-20 member rank raw data for IF and extension underlyings IH/IC when available.",
+    "fields": {
+      "date": "trading date",
+      "underlying": "IF/IH/IC",
+      "member_name": "member name",
+      "long_position": "volume returned under rank_by='long'",
+      "short_position": "volume returned under rank_by='short'",
+      "rank": "member rank"
+    },
+    "rows": 1000,
+    "start_date": "2017-03-06",
+    "end_date": "2017-04-13",
+    "missing_ratio": {
+      "date": 0.0,
+      "underlying": 0.0,
+      "commodity_id": 0.47,
+      "rank": 0.0,
+      "member_name": 0.0,
+      "long_position": 0.47,
+      "long_position_change": 0.47,
+      "short_position": 0.471,
+      "short_position_change": 0.471
+    },
+    "notes": "rqdatac.futures.get_member_rank returns a generic column named volume. This script calls rank_by='long' and rank_by='short' and renames returned volume to long_position/short_position. This field meaning still needs manual confirmation against CFFEX wording."
+  },
+  {
+    "name": "Futures member long short daily",
+    "file": "data\\raw\\futures_member_long_short_daily.csv.gz",
+    "frequency": "daily",
+    "description": "Daily top-20 long and short member position sums and long/short ratio for IF/IH/IC.",
+    "fields": {
+      "date": "trading date",
+      "long_sum_top20": "sum of top-20 long_position",
+      "short_sum_top20": "sum of top-20 short_position",
+      "long_short_ratio": "long_sum_top20 / short_sum_top20"
+    },
+    "rows": 5946,
+    "start_date": "2017-03-06",
+    "end_date": "2025-04-30",
+    "missing_ratio": {
+      "date": 0.0,
+      "underlying": 0.0,
+      "long_sum_top20": 0.0,
+      "short_sum_top20": 0.0,
+      "long_short_ratio": 0.0
+    },
+    "notes": "rqdatac.futures.get_member_rank returns a generic column named volume. This script calls rank_by='long' and rank_by='short' and renames returned volume to long_position/short_position. This field meaning still needs manual confirmation against CFFEX wording."
+  },
+  {
+    "name": "ERP raw",
+    "file": "data\\raw\\erp_raw.csv.gz",
+    "frequency": "daily",
+    "description": "000985.XSHG PE_TTM and China treasury 10Y yield aligned by date; no ERP signal is calculated.",
+    "fields": {
+      "date": "calendar/trading date",
+      "pe_ttm": "Index PE_TTM from rqdatac.index_indicator for 000985.XSHG",
+      "treasury_10y_yield": "10Y yield from rqdatac.get_yield_curve"
+    },
+    "rows": 3721,
+    "start_date": "2010-01-04",
+    "end_date": "2025-04-30",
+    "missing_ratio": {
+      "date": 0.0,
+      "pe_ttm": 0.10292932007524859,
+      "treasury_10y_yield": 0.0
+    },
+    "notes": "000985.XSHG is used as the Wind All-A proxy confirmed by the user request."
+  },
+  {
+    "name": "Margin buy market raw",
+    "file": "data\\raw\\margin_buy_market_raw.csv.gz",
+    "frequency": "daily market-level",
+    "description": "Market-level buy_on_margin_value for XSHE and XSHG returned directly by rqdatac.get_securities_margin.",
+    "fields": {
+      "date": "trading date",
+      "market": "XSHE or XSHG",
+      "buy_on_margin_value": "market-level margin buying value"
+    },
+    "rows": 7250,
+    "start_date": "2010-05-27",
+    "end_date": "2025-04-30",
+    "missing_ratio": {
+      "date": 0.0,
+      "market": 0.0,
+      "buy_on_margin_value": 0.0
+    },
+    "notes": "This version follows the report requirement more closely than stock-level aggregation."
+  },
+  {
+    "name": "Margin buy total",
+    "file": "data\\raw\\margin_buy_total.csv.gz",
+    "frequency": "daily",
+    "description": "Daily all-market margin buying value aggregated from the two market-level rows XSHE and XSHG.",
+    "fields": {
+      "date": "trading date",
+      "margin_buy_total": "XSHE buy_on_margin_value + XSHG buy_on_margin_value"
+    },
+    "rows": 3625,
+    "start_date": "2010-05-27",
+    "end_date": "2025-04-30",
+    "missing_ratio": {
+      "date": 0.0,
+      "margin_buy_total": 0.0
+    },
+    "notes": "Downloaded directly at market level from RiceQuant, then summed across the two exchanges."
+  }
+]
